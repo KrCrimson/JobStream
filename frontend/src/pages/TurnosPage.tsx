@@ -204,7 +204,7 @@ export const TurnosPage: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold text-gray-900">
-                        {turno.customer?.firstName || 'Cliente'} {turno.customer?.lastName || ''}
+                        {turno.customerData?.name || 'Cliente'} {turno.customerData?.lastName || ''}
                       </h3>
                       <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(turno.status)}`}>
                         {getStatusIcon(turno.status)}
@@ -230,9 +230,9 @@ export const TurnosPage: React.FC = () => {
                     </div>
 
                     {/* Información adicional */}
-                    {turno.customer?.identificationNumber && (
+                    {turno.customerData?.idNumber && (
                       <div className="mt-2 text-sm text-gray-500">
-                        {turno.customer.identificationType}: {turno.customer.identificationNumber}
+                        ID: {turno.customerData.idNumber}
                       </div>
                     )}
 
@@ -241,8 +241,8 @@ export const TurnosPage: React.FC = () => {
                       {turno.calledAt && (
                         <span>Llamado: {formatTime(turno.calledAt)}</span>
                       )}
-                      {turno.startedAt && (
-                        <span>Iniciado: {formatTime(turno.startedAt)}</span>
+                      {turno.attendedAt && (
+                        <span>Iniciado: {formatTime(turno.attendedAt)}</span>
                       )}
                       {turno.completedAt && (
                         <span>Completado: {formatTime(turno.completedAt)}</span>

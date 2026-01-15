@@ -287,3 +287,5 @@ const HealthIndicator: React.FC<{
     </div>
   );
 };
+
+export default DashboardPage;
