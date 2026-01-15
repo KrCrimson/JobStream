@@ -123,7 +123,17 @@ export const KioscoPage: React.FC = () => {
       console.error('❌ Error completo al generar turno:', error);
       console.error('❌ Response:', (error as any)?.response?.data);
       console.error('❌ Status:', (error as any)?.response?.status);
-      const errorMessage = (error as any)?.response?.data?.message || 'Error al generar turno';
+      console.error('❌ Validation errors:', (error as any)?.response?.data?.errors);
+      
+      const errorData = (error as any)?.response?.data;
+      let errorMessage = 'Error al generar turno';
+      
+      if (errorData?.errors && Array.isArray(errorData.errors)) {
+        errorMessage = errorData.errors.map((e: any) => e.msg || e.message).join(', ');
+      } else if (errorData?.message) {
+        errorMessage = errorData.message;
+      }
+      
       toast.error(errorMessage);
     }
   };
