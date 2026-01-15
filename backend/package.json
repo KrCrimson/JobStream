@@ -12,6 +12,7 @@
     "worker": "ts-node src/workers/processor.ts",
     "seed": "ts-node seed.ts",
     "seed:admin": "ts-node src/scripts/createAdmin.ts",
+    "update:admin": "ts-node src/scripts/updateAdmin.ts",
     "seed:worker": "ts-node src/scripts/createWorkerUser.ts",
     "clear:db": "ts-node src/scripts/clearDatabase.ts",
     "clear:turns": "ts-node src/scripts/clearTurns.ts",
