@@ -10,6 +10,9 @@ export interface ISystemConfig extends Document {
   
   // Configuración de tickets
   ticketFormat: {
+    prefix: string; // Prefijo del ticket (ej: "A", "T")
+    useAreaCode: boolean; // Usar código de área en lugar del prefijo
+    numberLength: number; // Longitud del número (ej: 3 para 001, 5 para 00001)
     showQueueCode: boolean; // Mostrar código de cola
     showQueueName: boolean; // Mostrar nombre de cola
     showEstimatedWait: boolean; // Mostrar tiempo estimado
@@ -74,6 +77,21 @@ const systemConfigSchema = new Schema<ISystemConfig>(
       default: 'none',
     },
     ticketFormat: {
+      prefix: {
+        type: String,
+        default: 'T',
+        maxlength: 5,
+      },
+      useAreaCode: {
+        type: Boolean,
+        default: true,
+      },
+      numberLength: {
+        type: Number,
+        default: 3,
+        min: 3,
+        max: 10,
+      },
       showQueueCode: {
         type: Boolean,
         default: true,

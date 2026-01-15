@@ -197,6 +197,10 @@ turnSchema.methods.calculateCurrentWaitTime = function() {
 
 // Método estático para generar número de turno
 turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string): Promise<string> {
+  // Obtener configuración del sistema
+  const SystemConfig = mongoose.model('SystemConfig');
+  const config = await SystemConfig.findOne();
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const tomorrow = new Date(today);
@@ -210,8 +214,12 @@ turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string):
     },
   });
   
-  const number = (count + 1).toString().padStart(3, '0');
-  return `${serviceAreaCode}${number}`;
+  // Usar configuración o valores por defecto
+  const prefix = config?.ticketFormat?.useAreaCode ? serviceAreaCode : (config?.ticketFormat?.prefix || 'T');
+  const numberLength = config?.ticketFormat?.numberLength || 3;
+  const number = (count + 1).toString().padStart(numberLength, '0');
+  
+  return `${prefix}${number}`;
 };
 
 export const Turn = mongoose.model<ITurn, ITurnModel>('Turn', turnSchema);
