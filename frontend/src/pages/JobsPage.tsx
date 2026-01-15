@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, Modal, Input, Select } from '@/components/UI';
+import { Card, Button, Modal, Select } from '@/components/UI';
 import { StatusBadge, ProgressBar } from '@/components/StatusBadge';
 import { jobService } from '@/services/jobService';
 import { queueService } from '@/services/queueService';

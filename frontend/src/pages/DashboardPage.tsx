@@ -264,28 +264,4 @@ export const DashboardPage: React.FC = () => {
   );
 };
 
-const HealthIndicator: React.FC<{
-  label: string;
-  status: 'healthy' | 'warning' | 'error' | 'idle';
-}> = ({ label, status }) => {
-  const statusConfig = {
-    healthy: { color: 'bg-green-500', text: 'Healthy' },
-    warning: { color: 'bg-yellow-500', text: 'Warning' },
-    error: { color: 'bg-red-500', text: 'Error' },
-    idle: { color: 'bg-gray-400', text: 'Idle' },
-  };
-  
-  const config = statusConfig[status];
-  
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-gray-700">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className={`w-3 h-3 rounded-full ${config.color}`} />
-        <span className="text-sm text-gray-600">{config.text}</span>
-      </div>
-    </div>
-  );
-};
-
 export default DashboardPage;
