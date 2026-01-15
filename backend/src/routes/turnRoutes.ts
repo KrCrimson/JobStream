@@ -21,22 +21,22 @@ const createTurnValidation = [
     .withMessage('Prioridad inválida'),
   
   body('customerData.idNumber')
-    .optional()
+    .optional({ checkFalsy: true })
     .isLength({ min: 1, max: 20 })
     .withMessage('Número de identificación inválido'),
   
   body('customerData.name')
-    .optional()
+    .optional({ checkFalsy: true })
     .isLength({ min: 1, max: 50 })
     .withMessage('Nombre inválido'),
   
   body('customerData.lastName')
-    .optional()
+    .optional({ checkFalsy: true })
     .isLength({ min: 1, max: 50 })
     .withMessage('Apellido inválido'),
   
   body('customerData.phone')
-    .optional()
+    .optional({ checkFalsy: true })
     .matches(/^[\+]?[0-9\s\-\(\)]{7,20}$/)
     .withMessage('Número de teléfono inválido'),
   

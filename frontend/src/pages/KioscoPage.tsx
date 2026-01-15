@@ -95,9 +95,15 @@ export const KioscoPage: React.FC = () => {
         data.customerData = {
           name: validationData.firstName,
           lastName: validationData.lastName,
-          idNumber: validationData.identificationNumber,
-          phone: validationData.phone,
         };
+        
+        // Solo agregar campos si tienen valor
+        if (validationData.identificationNumber) {
+          data.customerData.idNumber = validationData.identificationNumber;
+        }
+        if (validationData.phone) {
+          data.customerData.phone = validationData.phone;
+        }
       }
 
       console.log('📤 Enviando datos al backend:', data);
