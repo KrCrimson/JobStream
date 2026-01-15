@@ -5,9 +5,9 @@ class ApiClient {
   private client: AxiosInstance;
   
   constructor() {
-    const baseURL = import.meta.env.VITE_API_URL 
-      ? `${import.meta.env.VITE_API_URL}/api/v1`
-      : '/api/v1';
+    // Use VITE_API_URL in production, fallback to relative path in development
+    const apiUrl = (import.meta as any).env?.VITE_API_URL;
+    const baseURL = apiUrl ? `${apiUrl}/api/v1` : '/api/v1';
     
     this.client = axios.create({
       baseURL,
