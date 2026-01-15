@@ -93,12 +93,10 @@ export const KioscoPage: React.FC = () => {
 
       if (config?.requireCustomerValidation) {
         data.customerData = {
-          firstName: validationData.firstName,
+          name: validationData.firstName,
           lastName: validationData.lastName,
-          identificationType: validationData.identificationType,
-          identificationNumber: validationData.identificationNumber,
+          idNumber: validationData.identificationNumber,
           phone: validationData.phone,
-          email: validationData.email,
         };
       }
 

@@ -29,12 +29,10 @@ export interface CreateTurnoData {
   serviceAreaCode: string;
   priority?: boolean;
   customerData?: {
-    firstName?: string;
+    name?: string;
     lastName?: string;
-    identificationType?: string;
-    identificationNumber?: string;
+    idNumber?: string;
     phone?: string;
-    email?: string;
   };
   notes?: string;
 }
