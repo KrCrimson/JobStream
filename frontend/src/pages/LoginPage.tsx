@@ -60,10 +60,6 @@ export const LoginPage: React.FC = () => {
             Sign In
           </Button>
         </form>
-        
-        <div className="mt-6 text-center text-sm text-gray-600">
-          Demo credentials: admin@jobstream.com / Admin123!
-        </div>
       </Card>
     </div>
   );

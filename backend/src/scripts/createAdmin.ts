@@ -14,18 +14,21 @@ const createAdminUser = async () => {
     logger.info('✅ Connected to MongoDB');
 
     // Verificar si ya existe un admin
-    const existingAdmin = await User.findOne({ email: 'admin@jobstream.com' });
+    const existingAdmin = await User.findOne({ email: 'sa2019062986@virtual.upt.pe' });
     
     if (existingAdmin) {
       logger.info('⚠️  Admin user already exists');
-      logger.info('Email: admin@jobstream.com');
+      logger.info('Email: sa2019062986@virtual.upt.pe');
       return;
     }
 
+    // Borrar admin anterior si existe
+    await User.deleteOne({ email: 'admin@jobstream.com' });
+
     // Crear usuario admin
     await User.create({
-      email: 'admin@jobstream.com',
-      password: 'Admin123!', // Cambiar esta contraseña en producción
+      email: 'sa2019062986@virtual.upt.pe',
+      password: 'Elarce12',
       name: 'Administrador Principal',
       role: 'admin',
       isActive: true
@@ -33,11 +36,10 @@ const createAdminUser = async () => {
 
     logger.info('✅ Admin user created successfully!');
     logger.info('================================');
-    logger.info('Email: admin@jobstream.com');
-    logger.info('Password: Admin123!');
+    logger.info('Email: sa2019062986@virtual.upt.pe');
+    logger.info('Password: Elarce12');
     logger.info('Role: admin');
     logger.info('================================');
-    logger.info('⚠️  IMPORTANTE: Cambia la contraseña después del primer login');
 
   } catch (error) {
     logger.error('❌ Error creating admin user:', error);
