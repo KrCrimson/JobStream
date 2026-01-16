@@ -197,10 +197,6 @@ turnSchema.methods.calculateCurrentWaitTime = function() {
 
 // Método estático para generar número de turno
 turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string): Promise<string> {
-  // Obtener configuración del sistema
-  const SystemConfig = mongoose.model('SystemConfig');
-  const config = await SystemConfig.findOne();
-  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const tomorrow = new Date(today);
@@ -214,11 +210,24 @@ turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string):
     },
   });
   
-  // Usar configuración o valores por defecto
-  const prefix = config?.ticketFormat?.useAreaCode ? serviceAreaCode : (config?.ticketFormat?.prefix || 'T');
-  const numberLength = config?.ticketFormat?.numberLength || 3;
-  const number = (count + 1).toString().padStart(numberLength, '0');
+  // Intentar obtener configuración, usar valores por defecto si falla
+  let prefix = serviceAreaCode;
+  let numberLength = 3;
   
+  try {
+    const SystemConfig = mongoose.model('SystemConfig');
+    const config = await SystemConfig.findOne();
+    
+    if (config) {
+      prefix = config.ticketFormat?.useAreaCode ? serviceAreaCode : (config.ticketFormat?.prefix || 'T');
+      numberLength = config.ticketFormat?.numberLength || 3;
+    }
+  } catch (error) {
+    // Si hay error obteniendo config, usar valores por defecto
+    console.error('Error obteniendo config para generar turno:', error);
+  }
+  
+  const number = (count + 1).toString().padStart(numberLength, '0');
   return `${prefix}${number}`;
 };
 
