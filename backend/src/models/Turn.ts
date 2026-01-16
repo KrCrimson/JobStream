@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { TurnStatus, TurnPriority } from '../types';
+import { SystemConfig, ISystemConfig } from './SystemConfig';
 
 export interface ITurn extends Document {
   turnNumber: string; // CA001, FA001, etc.
@@ -216,8 +217,7 @@ turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string):
   
   // Intentar obtener configuración sin lanzar errores
   try {
-    const configModel = mongoose.models.SystemConfig || mongoose.model('SystemConfig');
-    const config = await configModel.findOne().lean().exec();
+    const config = await SystemConfig.findOne().lean().exec() as ISystemConfig | null;
     
     if (config?.ticketFormat) {
       if (config.ticketFormat.useAreaCode === false && config.ticketFormat.prefix) {
