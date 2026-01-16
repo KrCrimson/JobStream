@@ -197,19 +197,6 @@ turnSchema.methods.calculateCurrentWaitTime = function() {
 
 // Método estático para generar número de turno
 turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string): Promise<string> {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  
-  const count = await this.countDocuments({
-    serviceAreaCode,
-    createdAt: {
-      $gte: today,
-      $lt: tomorrow,
-    },
-  });
-  
   // Valores por defecto
   let prefix = serviceAreaCode;
   let numberLength = 3;
@@ -231,7 +218,31 @@ turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string):
     console.log('Usando configuración por defecto para generar turno');
   }
   
-  const number = (count + 1).toString().padStart(numberLength, '0');
+  // Buscar el último turno con este prefijo para obtener el número más alto
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  // Buscar el último turno de hoy con este prefijo
+  const lastTurn = await this.findOne({
+    turnNumber: new RegExp(`^${prefix}\\d+$`),
+    createdAt: {
+      $gte: today,
+      $lt: tomorrow,
+    },
+  }).sort({ turnNumber: -1 }).lean().exec();
+  
+  let nextNumber = 1;
+  if (lastTurn && lastTurn.turnNumber) {
+    // Extraer el número del turnNumber (ej: CA015 -> 15)
+    const match = lastTurn.turnNumber.match(/\d+$/);
+    if (match) {
+      nextNumber = parseInt(match[0], 10) + 1;
+    }
+  }
+  
+  const number = nextNumber.toString().padStart(numberLength, '0');
   return `${prefix}${number}`;
 };
 
