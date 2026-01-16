@@ -32,6 +32,9 @@ class Server {
   }
   
   private setupMiddleware(): void {
+    // Trust proxy for Render deployment
+    this.app.set('trust proxy', 1);
+    
     // Security
     this.app.use(helmet());
     
