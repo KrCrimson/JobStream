@@ -210,21 +210,25 @@ turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string):
     },
   });
   
-  // Intentar obtener configuración, usar valores por defecto si falla
+  // Valores por defecto
   let prefix = serviceAreaCode;
   let numberLength = 3;
   
+  // Intentar obtener configuración sin lanzar errores
   try {
-    const SystemConfig = mongoose.model('SystemConfig');
-    const config = await SystemConfig.findOne();
+    const configModel = mongoose.models.SystemConfig || mongoose.model('SystemConfig');
+    const config = await configModel.findOne().lean().exec();
     
-    if (config) {
-      prefix = config.ticketFormat?.useAreaCode ? serviceAreaCode : (config.ticketFormat?.prefix || 'T');
-      numberLength = config.ticketFormat?.numberLength || 3;
+    if (config?.ticketFormat) {
+      if (config.ticketFormat.useAreaCode === false && config.ticketFormat.prefix) {
+        prefix = config.ticketFormat.prefix;
+      }
+      if (config.ticketFormat.numberLength && config.ticketFormat.numberLength > 0) {
+        numberLength = config.ticketFormat.numberLength;
+      }
     }
   } catch (error) {
-    // Si hay error obteniendo config, usar valores por defecto
-    console.error('Error obteniendo config para generar turno:', error);
+    console.log('Usando configuración por defecto para generar turno');
   }
   
   const number = (count + 1).toString().padStart(numberLength, '0');
