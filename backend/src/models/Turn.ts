@@ -218,30 +218,36 @@ turnSchema.statics.generateTurnNumber = async function(serviceAreaCode: string):
     console.log('Usando configuración por defecto para generar turno');
   }
   
-  // Buscar el último turno con este prefijo para obtener el número más alto
+  // Buscar todos los turnos de hoy con este prefijo
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
   
-  // Buscar el último turno de hoy con este prefijo
-  const lastTurn = await this.findOne({
+  // Buscar todos los turnos de hoy con este prefijo
+  const existingTurns = await this.find({
     turnNumber: new RegExp(`^${prefix}\\d+$`),
     createdAt: {
       $gte: today,
       $lt: tomorrow,
     },
-  }).sort({ turnNumber: -1 }).lean().exec();
+  }).select('turnNumber').lean().exec();
   
-  let nextNumber = 1;
-  if (lastTurn && lastTurn.turnNumber) {
-    // Extraer el número del turnNumber (ej: CA015 -> 15)
-    const match = lastTurn.turnNumber.match(/\d+$/);
-    if (match) {
-      nextNumber = parseInt(match[0], 10) + 1;
+  let maxNumber = 0;
+  existingTurns.forEach((turn: any) => {
+    if (turn.turnNumber) {
+      // Extraer el número del turnNumber (ej: CA015 -> 15)
+      const match = turn.turnNumber.match(/\d+$/);
+      if (match) {
+        const num = parseInt(match[0], 10);
+        if (num > maxNumber) {
+          maxNumber = num;
+        }
+      }
     }
-  }
+  });
   
+  const nextNumber = maxNumber + 1;
   const number = nextNumber.toString().padStart(numberLength, '0');
   return `${prefix}${number}`;
 };
